@@ -1,9 +1,10 @@
 namespace NoNameLudovik.CodingTracker;
 
-public enum MenuOption
+internal enum MenuOptions
 {
     AddSession,
     EditSession,
     DeleteSession,
     ViewSessions,
+    Exit
 }
