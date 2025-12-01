@@ -48,7 +48,6 @@ internal class MenuController
         var endTime = Helper.GetDateTime();
         
         var session = new CodingSession(startTime, endTime);
-        
         AnsiConsole.MarkupLine(string.Format("{0}:{1:mm}:{1:ss}", (int)session.Duration.TotalHours, session.Duration));
         AnsiConsole.Ask<string>("");
     }
