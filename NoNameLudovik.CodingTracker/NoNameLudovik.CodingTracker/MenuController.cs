@@ -18,7 +18,7 @@ internal class MenuController
             switch (optionChoice)
             {
                 case MenuOptions.AddSession:
-                    AnsiConsole.Ask("Add session", DateTime.Now);
+                    AddSession();
                     break;
                 case MenuOptions.EditSession:
                     AnsiConsole.Markup("Edit session");
@@ -34,5 +34,22 @@ internal class MenuController
                     break;
             }
         }
+    }
+
+    internal static void AddSession()
+    {
+        AnsiConsole.Clear();
+        AnsiConsole.MarkupLine("[bold yellow]Add Session[/]\n");
+        
+        AnsiConsole.MarkupLine("[blue]Start Time[/]");
+        var startTime = Helper.GetDateTime();
+        
+        AnsiConsole.MarkupLine("[blue]End Time[/]");
+        var endTime = Helper.GetDateTime();
+        
+        var session = new CodingSession(startTime, endTime);
+        
+        AnsiConsole.MarkupLine(string.Format("{0}:{1:mm}:{1:ss}", (int)session.Duration.TotalHours, session.Duration));
+        AnsiConsole.Ask<string>("");
     }
 }
