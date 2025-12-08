@@ -8,28 +8,29 @@ namespace NoNameLudovik.CodingTracker;
 internal class DataBaseController
 {
     static IConfigurationRoot _config = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional:false, reloadOnChange:true).Build();
-    private SqliteConnection _connection = new SqliteConnection(_config["connectionString"]);
+    static SqliteConnection _connection = new SqliteConnection(_config["connectionString"]);
 
-    internal DataBaseController()
-    {
-        //CreatTable();
-    }
+    // internal DataBaseController()
+    // {
+    //     CreatTable();
+    // }
 
-    internal void CreatTable()
+    internal static void CreatTable()
     {
-        string createTableSql =
-            @"CREATE TABLE codingSessions (
+            string createTableSqlQuery =
+                @"CREATE TABLE IF NOT EXISTS codingSessions (
             Id INTEGER PRIMARY KEY AUTOINCREMENT, 
             StartTime TEXT, 
-            EndTime TEXT, 
-            Duration TEXT);";
-        _connection.Execute(createTableSql);
+            EndTime TEXT);";
+            _connection.Execute(createTableSqlQuery);
     }
     
-    /*internal void Insert(string startTime, string endTime) 
+    internal static void Insert(DateTime startTime, DateTime endTime) 
     {
-        string insertSql = @"INSERT INTO codingSessions (StartTime, EndTime, Duration) VALUES (@startTime, @EndTime, @Duration)";
-        
-        _connection.Execute(insertSql, startTime, endTime,);
-    }*/
+            string insertSqlQuery =
+                @"INSERT INTO codingSessions (StartTime, EndTime) VALUES (@StartTime, @EndTime)";
+
+            var test = new {StartTime = startTime, EndTime = endTime};
+            _connection.Execute(insertSqlQuery, test);
+    }
 }

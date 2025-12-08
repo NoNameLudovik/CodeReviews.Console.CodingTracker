@@ -8,13 +8,13 @@ class Program
 {
     static void Main(string[] args)
     {
-        /*DataBaseController dataBaseController = new DataBaseController();
-        dataBaseController.CreatTable();*/
+        //DataBaseController dataBaseController = new DataBaseController();
         // var config = new ConfigurationBuilder()
         //     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
         //     .Build();
         //
         // string congratulationString = config["connectionString"];
+        DataBaseController.CreatTable();
         MenuController.MainMenu();
     }
 }

@@ -5,6 +5,6 @@ internal enum MenuOptions
     AddSession,
     EditSession,
     DeleteSession,
-    ViewSessions,
+    ShowSessions,
     Exit
 }

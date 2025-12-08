@@ -26,7 +26,7 @@ internal class MenuController
                 case MenuOptions.DeleteSession:
                     AnsiConsole.Markup("Delete session");
                     break;
-                case MenuOptions.ViewSessions:
+                case MenuOptions.ShowSessions:
                     AnsiConsole.Markup("View sessions");
                     break;
                 case MenuOptions.Exit:
@@ -36,7 +36,7 @@ internal class MenuController
         }
     }
 
-    internal static void AddSession()
+    private static void AddSession()
     {
         AnsiConsole.Clear();
         AnsiConsole.MarkupLine("[bold yellow]Add Session[/]\n");
@@ -47,8 +47,24 @@ internal class MenuController
         AnsiConsole.MarkupLine("[blue]End Time[/]");
         var endTime = Helper.GetDateTime();
         
-        var session = new CodingSession(startTime, endTime);
-        AnsiConsole.MarkupLine(string.Format("{0}:{1:mm}:{1:ss}", (int)session.Duration.TotalHours, session.Duration));
-        AnsiConsole.Ask<string>("");
+        /*var session = new CodingSession(startTime, endTime);*/
+        DataBaseController.Insert(startTime, endTime);
+        /*AnsiConsole.MarkupLine(string.Format("{0}:{1:mm}:{1:ss}", (int)session.Duration.TotalHours, session.Duration));
+        AnsiConsole.Ask<string>("");*/
+    }
+
+    private static void EditSession()
+    {
+        
+    }
+
+    private static void DeleteSession()
+    {
+        
+    }
+
+    private static void ShowSessions()
+    {
+        
     }
 }
