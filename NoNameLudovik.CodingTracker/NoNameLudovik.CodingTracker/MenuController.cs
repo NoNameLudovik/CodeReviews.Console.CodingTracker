@@ -27,7 +27,7 @@ internal class MenuController
                     AnsiConsole.Markup("Delete session");
                     break;
                 case MenuOptions.ShowSessions:
-                    AnsiConsole.Markup("View sessions");
+                    ShowSessions();
                     break;
                 case MenuOptions.Exit:
                     Environment.Exit(0);
@@ -65,6 +65,23 @@ internal class MenuController
 
     private static void ShowSessions()
     {
-        
+        var codingSessions = DataBaseController.SelectFromTable();
+        var table = new Table();
+        table.AddColumn(new TableColumn("ID").Centered());
+        table.AddColumn(new TableColumn("StartTime").Centered());
+        table.AddColumn(new TableColumn("EndTime").Centered());
+        table.AddColumn(new TableColumn("Duration").Centered());
+
+        foreach (var codingSession in codingSessions)
+        {
+            codingSession.CalculateDuration();
+            table.AddRow(codingSession.Id.ToString(), 
+                codingSession.StartTime, 
+                codingSession.EndTime, 
+                string.Format("{0}:{1:mm}:{1:ss}", (int)codingSession.Duration.TotalHours, codingSession.Duration));
+        }
+
+        AnsiConsole.Write(table);
+        Console.Read();
     }
 }

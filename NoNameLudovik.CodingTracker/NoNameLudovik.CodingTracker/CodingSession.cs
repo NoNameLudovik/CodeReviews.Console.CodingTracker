@@ -1,30 +1,20 @@
+using System.Globalization;
+
 namespace NoNameLudovik.CodingTracker;
 
 public class CodingSession
 {
     internal int Id{get;set;}
-    internal DateTime StartTime{get;set;}
-    internal DateTime EndTime{get;set;}
-    internal TimeSpan Duration{get;set;}
+    internal string StartTime{get;set;}
+    internal string EndTime{get;set;}
+    internal TimeSpan Duration{get; set;}
 
-    internal CodingSession(int id, DateTime startTime, DateTime endTime)
+    internal void CalculateDuration()
     {
-        Id = id;
-        StartTime = startTime;
-        EndTime = endTime;
-        Duration = CalculateDuration();
-    }
+        var endTime = DateTime.ParseExact(EndTime, "dd-MM-yyyy HH:mm", new CultureInfo("en-US"), DateTimeStyles.None);
+        var startTime = DateTime.ParseExact(StartTime, "dd-MM-yyyy HH:mm", new CultureInfo("en-US"), DateTimeStyles.None);
 
-    internal CodingSession(DateTime startTime, DateTime endTime)
-    {
-        StartTime = startTime;
-        EndTime = endTime;
-        Duration = CalculateDuration();
-    }
-
-    private TimeSpan CalculateDuration()
-    {
-        return EndTime - StartTime;
+        Duration = endTime - startTime;
     }
     
     
