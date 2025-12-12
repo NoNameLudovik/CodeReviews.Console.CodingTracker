@@ -47,4 +47,25 @@ internal class DataBaseController
         string deleteSqlQuery = @"DELETE FROM codingSessions WHERE Id = @sessionId";
         _connection.Execute(deleteSqlQuery, new { sessionId });
     }
+
+    internal static void UpdateRowInTable(int sessionId, string newTime, EditOptions editOption)
+    {
+        string updateSqlQuery = null;
+        
+        switch (editOption)
+        {
+            case EditOptions.EditStartTime:
+                updateSqlQuery = @"UPDATE codingSessions
+                                        SET StartTime = @newTime
+                                        Where Id = @sessionId";
+                break;
+            case EditOptions.EditEndTime:
+                updateSqlQuery = @"UPDATE codingSessions
+                                        SET EndTime = @newTime
+                                        Where Id = @sessionId";
+                break;
+        }
+        
+        _connection.Execute(updateSqlQuery, new{ newTime, sessionId});
+    }
 }

@@ -21,7 +21,8 @@ internal class MenuController
                     AddSession();
                     break;
                 case MenuOptions.EditSession:
-                    AnsiConsole.Markup("Edit session");
+                    EditSession();
+                    Console.ReadKey();
                     break;
                 case MenuOptions.DeleteSession:
                     DeleteSession();
@@ -57,7 +58,19 @@ internal class MenuController
 
     private static void EditSession()
     {
+        ShowSessions();
         
+        var sessionId = AnsiConsole.Ask<int>("Type in [green]ID[/] of session you want to edit?");
+        var editOption = AnsiConsole.Prompt(new SelectionPrompt<EditOptions>().
+            Title("Choose what you want to edit:").
+            AddChoices(Enum.GetValues<EditOptions>()));
+        
+        AnsiConsole.Clear();
+        var newTime = Helper.GetDateTime();
+
+        DataBaseController.UpdateRowInTable(sessionId, newTime.ToString("dd-MM-yyyy HH:mm"),  editOption);
+        
+        AnsiConsole.MarkupLine("[green]Success[/]");
     }
 
     private static void DeleteSession()

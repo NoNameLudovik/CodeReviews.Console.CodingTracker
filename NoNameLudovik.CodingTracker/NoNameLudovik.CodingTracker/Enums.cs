@@ -8,3 +8,9 @@ internal enum MenuOptions
     ShowSessions,
     Exit
 }
+
+internal enum EditOptions
+{
+    EditStartTime,
+    EditEndTime,
+}
