@@ -24,10 +24,12 @@ internal class MenuController
                     AnsiConsole.Markup("Edit session");
                     break;
                 case MenuOptions.DeleteSession:
-                    AnsiConsole.Markup("Delete session");
+                    DeleteSession();
+                    Console.ReadKey();
                     break;
                 case MenuOptions.ShowSessions:
                     ShowSessions();
+                    Console.ReadKey();
                     break;
                 case MenuOptions.Exit:
                     Environment.Exit(0);
@@ -60,17 +62,21 @@ internal class MenuController
 
     private static void DeleteSession()
     {
-        
+        ShowSessions();
+        var sessionId = AnsiConsole.Ask<int>("Type in [green]ID[/] of session you want to delete?");
+        DataBaseController.DeleteFromTable(sessionId);
     }
 
     private static void ShowSessions()
     {
         var codingSessions = DataBaseController.SelectFromTable();
         var table = new Table();
-        table.AddColumn(new TableColumn("ID").Centered());
-        table.AddColumn(new TableColumn("StartTime").Centered());
-        table.AddColumn(new TableColumn("EndTime").Centered());
-        table.AddColumn(new TableColumn("Duration").Centered());
+        table.AddColumn(new TableColumn("[green]ID[/]").Centered());
+        table.AddColumn(new TableColumn("[blue]StartTime[/]").Centered());
+        table.AddColumn(new TableColumn("[blue]EndTime[/]").Centered());
+        table.AddColumn(new TableColumn("[yellow]Duration[/]").Centered());
+        table.ShowRowSeparators();
+        table.Border(TableBorder.Rounded);
 
         foreach (var codingSession in codingSessions)
         {
@@ -82,6 +88,6 @@ internal class MenuController
         }
 
         AnsiConsole.Write(table);
-        Console.Read();
     }
+    
 }

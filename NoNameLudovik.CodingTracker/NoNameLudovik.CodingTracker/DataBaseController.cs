@@ -30,8 +30,8 @@ internal class DataBaseController
             string insertSqlQuery =
                 @"INSERT INTO codingSessions (StartTime, EndTime) VALUES (@StartTime, @EndTime)";
 
-            var test = new {StartTime = startTime.ToString("dd-MM-yyyy HH:mm"), EndTime = endTime.ToString("dd-MM-yyyy HH:mm")};
-            _connection.Execute(insertSqlQuery, test);
+            var newSession = new {StartTime = startTime.ToString("dd-MM-yyyy HH:mm"), EndTime = endTime.ToString("dd-MM-yyyy HH:mm")};
+            _connection.Execute(insertSqlQuery, newSession);
     }
 
     internal static List<CodingSession> SelectFromTable()
@@ -40,5 +40,11 @@ internal class DataBaseController
         
         var codingSessions = _connection.Query<CodingSession>(selectSqlQuery).ToList();
         return codingSessions;
+    }
+
+    internal static void DeleteFromTable(int sessionId)
+    {
+        string deleteSqlQuery = @"DELETE FROM codingSessions WHERE Id = @sessionId";
+        _connection.Execute(deleteSqlQuery, new { sessionId });
     }
 }
