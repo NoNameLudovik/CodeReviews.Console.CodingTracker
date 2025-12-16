@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Configuration;
-//using Microsoft.Extensions.Configuration.Json;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
@@ -41,6 +40,14 @@ internal class DataBaseController
         var codingSessions = _connection.Query<CodingSession>(selectSqlQuery).ToList();
         return codingSessions;
     }
+    
+    internal static CodingSession SelectFromTable(int sessionId)
+    {
+        string selectSqlQuery = @$"SELECT * FROM codingSessions WHERE Id = {sessionId}";
+        
+        var codingSessions = _connection.Query<CodingSession>(selectSqlQuery).ToList();
+        return codingSessions[0];
+    }
 
     internal static void DeleteFromTable(int sessionId)
     {
@@ -57,15 +64,22 @@ internal class DataBaseController
             case EditOptions.EditStartTime:
                 updateSqlQuery = @"UPDATE codingSessions
                                         SET StartTime = @newTime
-                                        Where Id = @sessionId";
+                                        WHERE Id = @sessionId";
                 break;
             case EditOptions.EditEndTime:
                 updateSqlQuery = @"UPDATE codingSessions
                                         SET EndTime = @newTime
-                                        Where Id = @sessionId";
+                                        WHERE Id = @sessionId";
                 break;
         }
-        
-        _connection.Execute(updateSqlQuery, new{ newTime, sessionId});
+
+        try
+        {
+            _connection.Execute(updateSqlQuery, new { newTime, sessionId });
+        }
+        catch(SqliteException error)
+        {
+            throw new Exception($"Error while updating coding session {sessionId}", error);
+        }
     }
 }

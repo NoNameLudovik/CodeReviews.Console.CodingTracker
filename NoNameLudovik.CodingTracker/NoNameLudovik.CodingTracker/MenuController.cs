@@ -41,48 +41,79 @@ internal class MenuController
 
     private static void AddSession()
     {
-        AnsiConsole.Clear();
-        AnsiConsole.MarkupLine("[bold yellow]Add Session[/]\n");
-        
-        AnsiConsole.MarkupLine("[blue]Start Time[/]");
-        var startTime = Helper.GetDateTime();
-        
-        AnsiConsole.MarkupLine("[blue]End Time[/]");
-        var endTime = Helper.GetDateTime();
-        
-        /*var session = new CodingSession(startTime, endTime);*/
-        DataBaseController.Insert(startTime, endTime);
-        /*AnsiConsole.MarkupLine(string.Format("{0}:{1:mm}:{1:ss}", (int)session.Duration.TotalHours, session.Duration));
-        AnsiConsole.Ask<string>("");*/
+        while (true)
+        {
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[bold yellow]Add Session[/]\n");
+
+            AnsiConsole.MarkupLine("[blue]Start Time[/]");
+            var startTime = Helper.GetDateTime();
+
+            AnsiConsole.MarkupLine("[blue]End Time[/]");
+            var endTime = Helper.GetDateTime();
+
+            if (startTime > endTime)
+            {
+                AnsiConsole.MarkupLine("[red]StartTime[/] can't be later then [red]EndTime[/]!");
+                Console.ReadKey();
+                continue;
+            }
+
+            DataBaseController.Insert(startTime, endTime);
+            AnsiConsole.MarkupLine("[green]Success![/]Session added!");
+            break;
+        }
     }
 
     private static void EditSession()
     {
         ShowSessions();
         
-        var sessionId = AnsiConsole.Ask<int>("Type in [green]ID[/] of session you want to edit?");
+        DateTime newTime;
+        var sessionId = Helper.GetId();
         var editOption = AnsiConsole.Prompt(new SelectionPrompt<EditOptions>().
             Title("Choose what you want to edit:").
             AddChoices(Enum.GetValues<EditOptions>()));
-        
-        AnsiConsole.Clear();
-        var newTime = Helper.GetDateTime();
 
-        DataBaseController.UpdateRowInTable(sessionId, newTime.ToString("dd-MM-yyyy HH:mm"),  editOption);
-        
-        AnsiConsole.MarkupLine("[green]Success[/]");
+        while (true)
+        {
+            AnsiConsole.Clear();
+            newTime = Helper.GetDateTime();
+            if (!Helper.TimeValidation(newTime, sessionId, editOption))
+            {
+                AnsiConsole.MarkupLine("[red]StartTime[/] can't be later then [red]EndTime[/]!");
+                Console.ReadKey();
+                continue;
+            }
+
+            break;
+        }
+
+        try
+        {
+            DataBaseController.UpdateRowInTable(sessionId, newTime.ToString("dd-MM-yyyy HH:mm"), editOption);
+            
+            AnsiConsole.Clear();
+            AnsiConsole.MarkupLine("[green]Success![/]Date was changed!");
+        }
+        catch (Exception error)
+        {
+            AnsiConsole.MarkupLine($"[red]{error.Message}[/]");
+        }
     }
 
     private static void DeleteSession()
     {
         ShowSessions();
-        var sessionId = AnsiConsole.Ask<int>("Type in [green]ID[/] of session you want to delete?");
+        
+        var sessionId = Helper.GetId();
         DataBaseController.DeleteFromTable(sessionId);
     }
 
     private static void ShowSessions()
     {
         var codingSessions = DataBaseController.SelectFromTable();
+        
         var table = new Table();
         table.AddColumn(new TableColumn("[green]ID[/]").Centered());
         table.AddColumn(new TableColumn("[blue]StartTime[/]").Centered());
