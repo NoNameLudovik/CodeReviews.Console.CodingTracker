@@ -1,13 +1,20 @@
 using Microsoft.Extensions.Configuration;
 using Dapper;
 using Microsoft.Data.Sqlite;
+using SQLitePCL;
 
 namespace NoNameLudovik.CodingTracker;
 
 internal class DataBaseController
 {
     static IConfigurationRoot _config = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional:false, reloadOnChange:true).Build();
-    static SqliteConnection _connection = new SqliteConnection(_config["connectionString"]);
+
+    static string _projectRoot = Path.GetFullPath(
+        Path.Combine(
+            AppContext.BaseDirectory,
+            "..", "..", ".."));
+    static string _dbPath = Path.Combine(_projectRoot, _config["dbPath"]);
+    static SqliteConnection _connection = new SqliteConnection($"Data source = {_dbPath}");
 
     // internal DataBaseController()
     // {
