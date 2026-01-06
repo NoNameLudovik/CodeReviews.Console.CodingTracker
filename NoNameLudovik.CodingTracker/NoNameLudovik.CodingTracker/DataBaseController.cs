@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using SQLitePCL;
 
 namespace NoNameLudovik.CodingTracker;
 
