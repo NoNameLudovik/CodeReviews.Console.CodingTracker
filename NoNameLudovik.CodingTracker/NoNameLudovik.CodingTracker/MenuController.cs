@@ -59,8 +59,16 @@ internal class MenuController
                 continue;
             }
 
-            DataBaseController.Insert(startTime, endTime);
-            AnsiConsole.MarkupLine("[green]Success![/]Session added!");
+            try
+            {
+                DataBaseController.Insert(startTime, endTime);
+                AnsiConsole.MarkupLine("[green]Success![/]Session added!");
+            }
+            catch (Exception error)
+            {
+                AnsiConsole.MarkupLine($"[red]{error.Message}[/]");
+            }
+
             break;
         }
     }
@@ -107,7 +115,15 @@ internal class MenuController
         ShowSessions();
         
         var sessionId = Helper.GetId();
-        DataBaseController.DeleteFromTable(sessionId);
+        try
+        {
+            DataBaseController.DeleteFromTable(sessionId);
+            AnsiConsole.MarkupLine("[green]Success![/]Session deleted!");
+        }
+        catch(Exception error)
+        {
+            AnsiConsole.MarkupLine($"[red]{error.Message}[/]");
+        }
     }
 
     private static void ShowSessions()

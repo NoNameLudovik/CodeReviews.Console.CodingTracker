@@ -14,11 +14,6 @@ internal class DataBaseController
     static string _dbPath = Path.Combine(_projectRoot, _config["dbPath"]);
     static SqliteConnection _connection = new SqliteConnection($"Data source = {_dbPath}");
 
-    // internal DataBaseController()
-    // {
-    //     CreatTable();
-    // }
-
     internal static void CreatTable()
     {
             string createTableSqlQuery =
@@ -35,7 +30,15 @@ internal class DataBaseController
                 @"INSERT INTO codingSessions (StartTime, EndTime) VALUES (@StartTime, @EndTime)";
 
             var newSession = new {StartTime = startTime.ToString("dd-MM-yyyy HH:mm"), EndTime = endTime.ToString("dd-MM-yyyy HH:mm")};
-            _connection.Execute(insertSqlQuery, newSession);
+
+            try
+            {
+                _connection.Execute(insertSqlQuery, newSession);
+            }
+            catch (SqliteException error)
+            {
+                throw new Exception($"Error while adding new session to database", error);
+            }
     }
 
     internal static List<CodingSession> SelectFromTable()
@@ -57,7 +60,14 @@ internal class DataBaseController
     internal static void DeleteFromTable(int sessionId)
     {
         string deleteSqlQuery = @"DELETE FROM codingSessions WHERE Id = @sessionId";
-        _connection.Execute(deleteSqlQuery, new { sessionId });
+        try
+        {
+            _connection.Execute(deleteSqlQuery, new { sessionId });
+        }
+        catch (SqliteException error)
+        {
+            throw new Exception($"Error while deleting coding session {sessionId} in database", error);
+        }
     }
 
     internal static void UpdateRowInTable(int sessionId, string newTime, EditOptions editOption)
@@ -84,7 +94,7 @@ internal class DataBaseController
         }
         catch(SqliteException error)
         {
-            throw new Exception($"Error while updating coding session {sessionId}", error);
+            throw new Exception($"Error while updating coding session {sessionId} in database", error);
         }
     }
 }
